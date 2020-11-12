@@ -27,3 +27,24 @@ configurations {
         it.outgoing.artifact(bootJar)
     }
 }
+
+release{
+    afterReleaseBuild.dependsOn publish
+}
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/lolobored/elastic-monitor")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("PASSWORD")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
