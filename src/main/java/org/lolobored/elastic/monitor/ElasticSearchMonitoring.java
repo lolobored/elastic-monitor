@@ -17,9 +17,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.Console;
-import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
@@ -76,8 +76,14 @@ public class ElasticSearchMonitoring implements ApplicationRunner {
 
     String elasticUrl= args.getOptionValues("elastic").get(0);
     String userName= args.getOptionValues("user").get(0);
-    char[] passwordArray = console.readPassword("Enter ES password for "+userName+": ");
-    String password= new String(passwordArray);
+    String password="";
+    if (!args.containsOption("password")) {
+      char[] passwordArray = console.readPassword("Enter ES password for " + userName + ": ");
+      password = new String(passwordArray);
+    }
+    else{
+      password = args.getOptionValues("password").get(0);
+    }
     String csvPath= args.getOptionValues("csv").get(0);
     Long sleepTime= Long.parseLong(args.getOptionValues("interval").get(0));
     sleepTime= sleepTime*1000;
@@ -96,15 +102,17 @@ public class ElasticSearchMonitoring implements ApplicationRunner {
     }
     Long timeout = multiplicator * Long.parseLong(totalTime.substring(0, totalTime.length()-1));
     FileUtils.deleteQuietly(Paths.get(csvPath).toFile());
-
+    List<NodeStat> nodesStats= new ArrayList<>();
     while (timeout > 0) {
+      long startTime= System.currentTimeMillis();
       LocalDateTime now = LocalDateTime.now();
       List<String> nodeList = elasticService.getESNodes(elasticUrl, userName, password);
       String stats = elasticService.getNodesStats(elasticUrl, userName, password);
-      List<NodeStat> nodesStats = statService.getNodesStats(stats, nodeList, now);
+      nodesStats = statService.parseNodesStats(stats, nodeList, now, nodesStats, sleepTime);
       csvService.appendToCSV(csvPath, nodesStats);
       logger.info("Recording stats at "+now);
-      Thread.sleep(sleepTime);
+      long timeToSleep = sleepTime - (System.currentTimeMillis() - startTime);
+      Thread.sleep(timeToSleep>0?timeToSleep:0);
       timeout= timeout-sleepTime;
     }
   }

@@ -6,5 +6,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface StatService {
-  List<NodeStat> getNodesStats(String stats, List<String> nodes, LocalDateTime now);
+  List<NodeStat> parseNodesStats(String stats, List<String> nodes, LocalDateTime now, List<NodeStat> previousStats, long timeout);
 }

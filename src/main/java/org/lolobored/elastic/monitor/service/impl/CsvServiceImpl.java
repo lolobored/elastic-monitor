@@ -29,6 +29,15 @@ public class CsvServiceImpl implements CsvService {
     for (NodeStat stat : stats) {
       header.append("CPU ["+stat.getNodeId()+"];");
     }
+    for (NodeStat stat : stats) {
+      header.append("Search Latency ["+stat.getNodeId()+"];");
+    }
+    for (NodeStat stat : stats) {
+      header.append("Search Rate ["+stat.getNodeId()+"];");
+    }
+    for (NodeStat stat : stats) {
+      header.append("Indexing Rate ["+stat.getNodeId()+"];");
+    }
     header.append("\n");
     FileUtils.write(Paths.get(csvPath).toFile(), header.toString(), Charset.defaultCharset(), true);
   }
@@ -41,6 +50,15 @@ public class CsvServiceImpl implements CsvService {
     }
     for (NodeStat stat : stats) {
       metrics.append(stat.getCpu()).append(";");
+    }
+    for (NodeStat stat : stats) {
+      metrics.append(stat.getSearchLatency()).append(";");
+    }
+    for (NodeStat stat : stats) {
+      metrics.append(stat.getSearchRate()).append(";");
+    }
+    for (NodeStat stat : stats) {
+      metrics.append(stat.getIndexingRate()).append(";");
     }
     metrics.append("\n");
     FileUtils.write(Paths.get(csvPath).toFile(), metrics.toString(), Charset.defaultCharset(), true);
