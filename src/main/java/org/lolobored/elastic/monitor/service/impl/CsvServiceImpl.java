@@ -34,10 +34,10 @@ public class CsvServiceImpl implements CsvService {
       header.append("Search Latency ["+stat.getNodeId()+"];");
     }
     for (NodeStat stat : stats) {
-      header.append("Search Rate ["+stat.getNodeId()+"];");
+      header.append("Search Rate /s ["+stat.getNodeId()+"];");
     }
     for (NodeStat stat : stats) {
-      header.append("Indexing Rate ["+stat.getNodeId()+"];");
+      header.append("Indexing Rate /s ["+stat.getNodeId()+"];");
     }
     header.append("\n");
     FileUtils.write(Paths.get(csvPath).toFile(), header.toString(), Charset.defaultCharset(), true);
