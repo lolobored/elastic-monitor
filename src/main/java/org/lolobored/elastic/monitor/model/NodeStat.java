@@ -13,8 +13,8 @@ public class NodeStat {
   private Integer cpu;
   private BigDecimal searchLatency;
   private BigDecimal indexingLatency;
-  private Long searchTotal;
-  private BigDecimal searchRate;
-  private Long indexingTotal;
-  private BigDecimal indexingRate;
+  private Long searchTotal=(long)0;
+  private BigDecimal searchRate=BigDecimal.ZERO;
+  private Long indexingTotal=(long)0;
+  private BigDecimal indexingRate=BigDecimal.ZERO;
 }

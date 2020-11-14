@@ -12,6 +12,7 @@ import java.util.List;
 
 @Service
 public class CsvServiceImpl implements CsvService {
+
   @Override
   public void appendToCSV(String csvPath, List<NodeStat> stats) throws IOException {
     if (!Paths.get(csvPath).toFile().exists()){
